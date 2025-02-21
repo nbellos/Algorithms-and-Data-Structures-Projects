@@ -3,6 +3,7 @@ import argparse
 import random
 from collections import deque, defaultdict
 
+#επιλογή κόμβων με τον greedy (λαίμαργο) αλγόριθμο
 def maxepirroi(G, p, k, mc):
     """ Implements greedy selection for influence maximization """
     if not G:
@@ -11,7 +12,7 @@ def maxepirroi(G, p, k, mc):
 
     S = set()
     e = []
-    nodes = list(G.keys())  # Convert to list to avoid dictionary modification issue
+    nodes = list(G.keys())  
 
     for _ in range(k):
         max_influence = float('-inf')
@@ -33,7 +34,7 @@ def maxepirroi(G, p, k, mc):
 
     return list(S), e
 
-
+#εκτίμηση επιρροής με τη μέθοδο Monte Carlo
 def ektimhsh(G, sporoi, p, mc):
     """ Estimates influence spread using Monte Carlo simulation """
     total_influence = 0
@@ -56,6 +57,7 @@ def ektimhsh(G, sporoi, p, mc):
 
     return total_influence / mc
 
+#κατασκευή γράφου από το input αρχείο
 def build_graph(filename):
     """ Constructs graph from edge list file """
     graph = defaultdict(set)  
@@ -82,11 +84,12 @@ def build_graph(filename):
 
     return graph
 
-
+#επιλογή κορυφών με βάση μέγιστο βαθμό εξόδου
 def maxsporoi(G, k):
     """ Selects k nodes with the highest out-degree """
     return sorted(G, key=lambda node: len(G[node]), reverse=True)[:k]
 
+#υπολογισμός επιρροής για τους επιλεγμένους κόμβους 
 def evaluate_influence(G, sporoi, p, mc):
     """ Computes influence spread for selected seed nodes """
     influences = []
@@ -105,7 +108,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--random_seed", type=int, help="Random seed for reproducibility.", default=None)
     args = parser.parse_args()
 
-    # Set random seed for reproducibility
+    
     if args.random_seed is not None:
         random.seed(args.random_seed)
 
@@ -116,7 +119,7 @@ if __name__ == "__main__":
 
     if args.strategy == "greedy":
         sporoi, influences = maxepirroi(G, p, k, mc)
-    else:  # max_degree strategy
+    else:  
         sporoi = maxsporoi(G, k)
         influences = evaluate_influence(G, sporoi, p, mc)
 
